@@ -50,7 +50,16 @@ public sealed class InfrastructureTests
         Assert.Equal(Path.Combine(temp.Path, "10.0.10.0", "x64", "signtool.exe"), SignToolLocator.FindIn([temp.Path], [temp.Path]));
         Assert.Equal(pathTool, SignToolLocator.FindIn([], [temp.File("missing"), temp.Path]));
         Assert.Null(SignToolLocator.FindIn([], []));
-        Assert.Equal(@"C:\Program Files (x86)\Windows Kits\10\bin\10.0.26100.0\x64\signtool.exe", new SignToolLocator().Find());
+    }
+
+    [SignToolFact]
+    public void InstalledSignToolIsAnExistingAbsoluteExecutable()
+    {
+        var tool = new SignToolLocator().Find();
+        Assert.NotNull(tool);
+        Assert.True(Path.IsPathFullyQualified(tool));
+        Assert.True(File.Exists(tool));
+        Assert.Equal("signtool.exe", Path.GetFileName(tool), ignoreCase: true);
     }
 
     [Fact]

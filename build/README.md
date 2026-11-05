@@ -12,8 +12,8 @@ paths from its own location, so it can be called from any working directory.
 Examples below assume the repository root.
 
 First commit the release inputs. Both normal publishing and `-WhatIf` refuse any
-staged, unstaged or untracked changes under `apps/signapp`, printing the affected
-paths. Changes elsewhere in the repository do not block packaging. Git-ignored
+staged, unstaged or untracked changes in the repository, printing the affected
+paths. Git-ignored
 build outputs are not release inputs and are not reported by this check.
 
 ## Preview and package
@@ -25,13 +25,13 @@ Replace the example thumbprint before signing.
 
 ```powershell
 # Prints the publish, rename, checksum and manual signing commands; writes nothing.
-.\apps\signapp\build\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -WhatIf
+.\build\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -WhatIf
 
 # Publishes and hashes the unsigned executable; prints signing commands only.
-.\apps\signapp\build\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+.\build\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 # Smaller package for PCs with the Windows x64 .NET 10 Desktop Runtime installed.
-.\apps\signapp\build\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -FrameworkDependent
+.\build\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA -FrameworkDependent
 ```
 
 The publish command uses `-c Release -r win-x64 --self-contained true`,
@@ -44,8 +44,8 @@ produced. `-FrameworkDependent` changes `--self-contained` and
 `EnableCompressionInSingleFile` to `false`: the SDK supports bundle compression
 only for self-contained applications.
 
-Default output goes to `apps/signapp/out/<version>/`; framework-dependent output
-goes to `apps/signapp/out/<version>-framework-dependent/`, so both can coexist. An
+Default output goes to `out/<version>/`; framework-dependent output
+goes to `out/<version>-framework-dependent/`, so both can coexist. An
 additional
 `--artifacts-path` places build intermediates in that directory's `obj/` subtree
 so publishing does not write into `src` or `tests`. SDK restore may download NuGet
@@ -63,9 +63,7 @@ symbols, are build artifacts. The initial checksum describes the **unsigned**
 executable. Publishing does not require a signing certificate or SignTool.
 
 An existing version output directory is never overwritten. Failed publishing
-may leave partial output; move it aside before retrying. Newly generated release
-files are untracked unless ignored locally. Before another release, move previous
-output outside this checkout (or use a local Git exclude for `apps/signapp/out/`).
+may leave partial output; move it aside before retrying. Release outputs are ignored under `out/`.
 Do not commit binaries to clear the clean-tree check.
 
 ## Measured download sizes
@@ -92,11 +90,11 @@ available. The packaging script prints the exact absolute paths and supplied
 thumbprint for this sequence:
 
 ```powershell
-signtool sign /sha1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /fd sha256 /tr http://time.certum.pl /td sha256 'C:\path\to\repo\apps\signapp\out\1.0.0\SignMyApp-1.0.0-win-x64.exe'
+signtool sign /sha1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA /fd sha256 /tr '<timestamp-server-url>' /td sha256 'C:\path\to\repo\out\1.0.0\SignMyApp-1.0.0-win-x64.exe'
 if ($LASTEXITCODE -ne 0) { throw 'Signing failed; stop here.' }
-signtool verify /pa /v 'C:\path\to\repo\apps\signapp\out\1.0.0\SignMyApp-1.0.0-win-x64.exe'
+signtool verify /pa /v 'C:\path\to\repo\out\1.0.0\SignMyApp-1.0.0-win-x64.exe'
 if ($LASTEXITCODE -ne 0) { throw 'Signature verification failed; stop here.' }
-Get-FileHash -LiteralPath 'C:\path\to\repo\apps\signapp\out\1.0.0\SignMyApp-1.0.0-win-x64.exe' -Algorithm SHA256 | ForEach-Object { '{0}  {1}' -f $_.Hash.ToLowerInvariant(), 'SignMyApp-1.0.0-win-x64.exe' } | Set-Content -LiteralPath 'C:\path\to\repo\apps\signapp\out\1.0.0\SHA256SUMS.txt' -Encoding Ascii
+Get-FileHash -LiteralPath 'C:\path\to\repo\out\1.0.0\SignMyApp-1.0.0-win-x64.exe' -Algorithm SHA256 | ForEach-Object { '{0}  {1}' -f $_.Hash.ToLowerInvariant(), 'SignMyApp-1.0.0-win-x64.exe' } | Set-Content -LiteralPath 'C:\path\to\repo\out\1.0.0\SHA256SUMS.txt' -Encoding Ascii
 ```
 
 Run the printed commands only after a real publish. Signing changes the file;

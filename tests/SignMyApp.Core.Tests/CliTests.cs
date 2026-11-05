@@ -82,7 +82,7 @@ public sealed class CliTests
         Assert.Equal(correct ? 1 : 0, signer.Calls);
     }
 
-    [Fact]
+    [MsiFact]
     public async Task MixedRoundHoldsInstallerAndOtherPublisherUntilExplicitlySelected()
     {
         using var temp = new TempFolder();

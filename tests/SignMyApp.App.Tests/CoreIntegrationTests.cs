@@ -72,7 +72,7 @@ public sealed class CoreIntegrationTests
         });
     }
 
-    [Fact]
+    [SignToolFact]
     public async Task Unsigned_apphost_then_PFX_signed_without_timestamp_is_shown_honestly()
     {
         using var temp = new TempFolder();

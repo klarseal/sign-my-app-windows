@@ -29,11 +29,11 @@ function ConvertTo-PowerShellLiteral {
     return "'" + $Value.Replace("'", "''") + "'"
 }
 
-$repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..\..'))
-$projectPath = Join-Path $repoRoot 'apps\signapp\src\SignMyApp.App'
+$repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$projectPath = Join-Path $repoRoot 'src\SignMyApp.App'
 $variantSuffix = if ($FrameworkDependent) { '-framework-dependent' } else { '' }
 $selfContained = if ($FrameworkDependent) { 'false' } else { 'true' }
-$outputDirectory = Join-Path $repoRoot ('apps\signapp\out\' + $Version + $variantSuffix)
+$outputDirectory = Join-Path $repoRoot ('out\' + $Version + $variantSuffix)
 # Keep all compiler/restore intermediates outside src and tests, including WPF builds.
 $artifactsDirectory = Join-Path $outputDirectory 'obj'
 $fileName = 'SignMyApp-{0}-win-x64{1}.exe' -f $Version, $variantSuffix
@@ -42,12 +42,12 @@ $releaseExe = Join-Path $outputDirectory $fileName
 $checksumPath = Join-Path $outputDirectory 'SHA256SUMS.txt'
 
 $git = Get-Command git -CommandType Application -ErrorAction Stop | Select-Object -First 1
-$changes = @(& $git.Source -C $repoRoot status --porcelain=v1 --untracked-files=all -- apps/signapp)
+$changes = @(& $git.Source -C $repoRoot status --porcelain=v1 --untracked-files=all)
 if ($LASTEXITCODE -ne 0) {
     throw 'Cannot check Git status. Run this script from its Git checkout.'
 }
 if ($changes.Count -gt 0) {
-    Write-Host 'Refusing to package: apps/signapp has uncommitted changes (staged, unstaged or untracked):'
+    Write-Host 'Refusing to package: the repository has uncommitted changes (staged, unstaged or untracked):'
     $changes | ForEach-Object { Write-Host $_ }
     throw 'Commit or remove those changes before packaging. No publish or signing was performed.'
 }

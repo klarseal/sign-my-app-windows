@@ -44,11 +44,12 @@ internal static class Fixtures
     public static Task<string> UnsignedMsiAsync(TempFolder temp)
     {
         var file = temp.File("unsigned.msi");
-        System.IO.File.Copy(@"C:\Windows\Installer\103f2bbb.msi", file);
+        System.IO.File.Copy(MsiSource, file);
         MsiFixture.RemoveSignature(file);
         Assert.Equal(NativeSignature.NoSignature, NativeSignature.Verify(file));
         return Task.FromResult(file);
     }
+    public const string MsiSource = @"C:\Windows\Installer\103f2bbb.msi";
     public static SigningCertificate Certificate(CertSource source = CertSource.Store) => new(new string('A', 40),
         "CN=Test Publisher", "Test Publisher", "Test Issuer", DateTimeOffset.UtcNow.AddDays(-1),
         DateTimeOffset.UtcNow.AddDays(30), source, true, false);
@@ -102,7 +103,38 @@ internal sealed class TestPfxSigner : IDisposable
     public void Dispose() { Certificate.Dispose(); temp.Dispose(); }
 }
 
-public sealed class NetworkFactAttribute : FactAttribute
+public class SignToolFactAttribute : FactAttribute
+{
+    public SignToolFactAttribute()
+    {
+        if (new SignToolLocator().Find() is null) Skip = "Microsoft SignTool is not installed.";
+    }
+}
+
+public sealed class MsiFactAttribute : FactAttribute
+{
+    public MsiFactAttribute()
+    {
+        if (!File.Exists(Fixtures.MsiSource)) Skip = "The cached Microsoft MSI fixture is not installed.";
+    }
+}
+
+// Skip only the affected theory row: missing MSI must not suppress PE coverage.
+public sealed class FixtureInlineDataAttribute : Xunit.Sdk.DataAttribute
+{
+    private readonly bool msi;
+    public FixtureInlineDataAttribute(bool msi, bool requiresSignTool = false)
+    {
+        this.msi = msi;
+        if (requiresSignTool && new SignToolLocator().Find() is null)
+            Skip = "Microsoft SignTool is not installed.";
+        else if (msi && !File.Exists(Fixtures.MsiSource))
+            Skip = "The cached Microsoft MSI fixture is not installed.";
+    }
+    public override IEnumerable<object[]> GetData(System.Reflection.MethodInfo testMethod) => [[msi]];
+}
+
+public sealed class NetworkFactAttribute : SignToolFactAttribute
 {
     public NetworkFactAttribute()
     {

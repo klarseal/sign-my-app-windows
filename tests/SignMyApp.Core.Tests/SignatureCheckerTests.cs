@@ -18,8 +18,8 @@ public sealed class SignatureCheckerTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
+    [FixtureInlineData(false, requiresSignTool: true)]
+    [FixtureInlineData(true, requiresSignTool: true)]
     public async Task PfxSignedPeAndMsiExposeSignerAndMissingTimestamp(bool msi)
     {
         using var temp = new TempFolder();
@@ -42,7 +42,7 @@ public sealed class SignatureCheckerTests
         Assert.Contains("800B0109", untrusted.Detail);
     }
 
-    [Fact]
+    [SignToolFact]
     public async Task CorruptingSignedPeIsChangedSinceSigning()
     {
         using var temp = new TempFolder();
@@ -58,11 +58,11 @@ public sealed class SignatureCheckerTests
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
+    [FixtureInlineData(false)]
+    [FixtureInlineData(true)]
     public async Task CachedMicrosoftFilesExposeSignerAndTimestampReadOnly(bool msi)
     {
-        var path = msi ? @"C:\Windows\Installer\103f2bbb.msi" : @"C:\Program Files\dotnet\dotnet.exe";
+        var path = msi ? Fixtures.MsiSource : @"C:\Program Files\dotnet\dotnet.exe";
         Assert.True(File.Exists(path), $"Read-only fixture not found: {path}");
         var result = await new SignatureChecker().CheckAsync(path, default);
         Assert.Equal(FileState.Signed, result.State);
