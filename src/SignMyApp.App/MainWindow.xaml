@@ -1,0 +1,39 @@
+<Window x:Class="SignMyApp.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:SignMyApp.App.Views"
+        Title="Sign my app" Width="1280" Height="800" MinWidth="1024" MinHeight="640"
+        Icon="/SignMyApp;component/Assets/klarseal.ico"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource Brush.Bg}"
+        UseLayoutRounding="True">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="32" ResizeBorderThickness="6" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
+    <Grid x:Name="WindowContent">
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
+                        <Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <v:TitleBar x:Name="Caption" IsWindowActive="{Binding IsActive, RelativeSource={RelativeSource AncestorType=Window}}">
+            <v:TitleBar.Style>
+                <Style TargetType="v:TitleBar">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}" Value="Maximized">
+                            <Setter Property="IsMaximized" Value="True" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </v:TitleBar.Style>
+        </v:TitleBar>
+        <v:MainView x:Name="Main" Grid.Row="1" />
+    </Grid>
+</Window>

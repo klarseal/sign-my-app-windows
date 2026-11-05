@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>signmyapp</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="SignMyApp.Core.Tests" />
+    <ProjectReference Include="../SignMyApp.Core/SignMyApp.Core.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/SignMyApp.Core/SignMyApp.Core.csproj" />
+  <Project Path="src/SignMyApp.Cli/SignMyApp.Cli.csproj" />
+  <Project Path="src/SignMyApp.App/SignMyApp.App.csproj" />
+  <Project Path="tests/SignMyApp.Core.Tests/SignMyApp.Core.Tests.csproj" />
+  <Project Path="tests/SignMyApp.App.Tests/SignMyApp.App.Tests.csproj" />
+</Solution>

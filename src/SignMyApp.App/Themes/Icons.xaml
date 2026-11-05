@@ -1,0 +1,49 @@
+<!-- Line icons from the canvas, drawn as paths. Decorative: buttons carry their own names. -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Tokens.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Settings: two sliders, 18 px -->
+    <DataTemplate x:Key="Icon.Settings">
+        <Canvas Width="18" Height="18" IsHitTestVisible="False">
+            <Path Data="M2.5,5.5 H15.5 M2.5,12.5 H15.5" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" StrokeThickness="1.4" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+            <Ellipse Canvas.Left="4.5" Canvas.Top="3.5" Width="4" Height="4" Fill="{StaticResource Brush.Bg}" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" StrokeThickness="1.4" />
+            <Ellipse Canvas.Left="9.5" Canvas.Top="10.5" Width="4" Height="4" Fill="{StaticResource Brush.Bg}" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" StrokeThickness="1.4" />
+        </Canvas>
+    </DataTemplate>
+
+    <Geometry x:Key="Geo.Plus">M8,3 V13 M3,8 H13</Geometry>
+    <Geometry x:Key="Geo.Chevron">M4,6 L8,10 L12,6</Geometry>
+    <Geometry x:Key="Geo.Refresh">M13.5,8 A5.5,5.5 0 1 1 11.9,4.1 M12.4,1.6 V4.4 H9.6</Geometry>
+    <Geometry x:Key="Geo.Back">M13,8 H3 M7,4 L3,8 L7,12</Geometry>
+    <Geometry x:Key="Geo.Close">M2,2 L10,10 M10,2 L2,10</Geometry>
+    <!-- Original brand path from klarseal-mark-ink-transparent-1024.svg; no square plate. -->
+    <Geometry x:Key="Geo.KlarsealMark">M35 0a35 35 0 0 1 12.5 67.69V102.31A35 35 0 1 1 22.5 102.31V67.69A35 35 0 0 1 35 0Z</Geometry>
+    <Geometry x:Key="Geo.CaptionMinimize">M0,5.5 H10</Geometry>
+    <Geometry x:Key="Geo.CaptionMaximize">M2,0.5 H8 A1.5,1.5 0 0 1 9.5,2 V8 A1.5,1.5 0 0 1 8,9.5 H2 A1.5,1.5 0 0 1 0.5,8 V2 A1.5,1.5 0 0 1 2,0.5 Z</Geometry>
+    <Geometry x:Key="Geo.CaptionRestore">M2.5,2.5 V0.5 H9.5 V7.5 H7.5 M0.5,2.5 H7.5 V9.5 H0.5 Z</Geometry>
+    <Geometry x:Key="Geo.CaptionClose">M0.5,0.5 L9.5,9.5 M9.5,0.5 L0.5,9.5</Geometry>
+    <Geometry x:Key="Geo.File">M3.5,1.5 H9.5 L12.5,4.5 V14.5 H3.5 Z M9.5,1.5 V4.5 H12.5</Geometry>
+    <Geometry x:Key="Geo.Copy">M7,5.5 H12 A1.5,1.5 0 0 1 13.5,7 V12 A1.5,1.5 0 0 1 12,13.5 H7 A1.5,1.5 0 0 1 5.5,12 V7 A1.5,1.5 0 0 1 7,5.5 Z M10.5,5.5 V3.5 A1,1 0 0 0 9.5,2.5 H3.5 A1,1 0 0 0 2.5,3.5 V9.5 A1,1 0 0 0 3.5,10.5 H5.5</Geometry>
+
+    <Style x:Key="IconPath" TargetType="Path">
+        <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Control}}" />
+        <Setter Property="StrokeThickness" Value="1.6" />
+        <Setter Property="StrokeStartLineCap" Value="Round" />
+        <Setter Property="StrokeEndLineCap" Value="Round" />
+        <Setter Property="StrokeLineJoin" Value="Round" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Stretch" Value="None" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="0.875" ScaleY="0.875" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

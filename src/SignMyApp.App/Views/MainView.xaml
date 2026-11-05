@@ -1,0 +1,348 @@
+<UserControl x:Class="SignMyApp.App.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:SignMyApp.App.Controls"
+             xmlns:v="clr-namespace:SignMyApp.App.Views"
+             xmlns:t="clr-namespace:SignMyApp.App.Services"
+             FontFamily="{StaticResource Font.Sans}" Foreground="{StaticResource Brush.Ink}" Background="{StaticResource Brush.Bg}"
+             UseLayoutRounding="True" SnapsToDevicePixels="True" AllowDrop="True"
+             TextOptions.TextFormattingMode="Ideal">
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding AddFilesCommand}" />
+        <KeyBinding Key="F5" Command="{Binding CheckAgainCommand}" />
+    </UserControl.InputBindings>
+
+    <UserControl.Resources>
+        <!-- Compact layout (1024 × 640): smaller bars, rows and panels, no publisher column -->
+        <Style x:Key="Toolbar" TargetType="Border">
+            <Setter Property="MinHeight" Value="60" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompact}" Value="True"><Setter Property="MinHeight" Value="52" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Footer" TargetType="Border">
+            <Setter Property="MinHeight" Value="64" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompact}" Value="True"><Setter Property="MinHeight" Value="56" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DetailColumn" TargetType="Border">
+            <Setter Property="Width" Value="380" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompact}" Value="True"><Setter Property="Width" Value="320" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="StatusColumn" TargetType="FrameworkElement">
+            <Setter Property="Width" Value="196" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DataContext.IsCompact, RelativeSource={RelativeSource AncestorType=v:MainView}}" Value="True"><Setter Property="Width" Value="184" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="PublisherColumn" TargetType="FrameworkElement">
+            <Setter Property="Width" Value="176" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DataContext.IsCompact, RelativeSource={RelativeSource AncestorType=v:MainView}}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FirstRunTitle" TargetType="TextBlock" BasedOn="{StaticResource T.H1}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompact}" Value="True">
+                    <Setter Property="FontSize" Value="{StaticResource Text.H1Small}" />
+                    <Setter Property="LineHeight" Value="34" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DropZone" TargetType="Grid">
+            <Setter Property="Height" Value="280" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompact}" Value="True"><Setter Property="Height" Value="220" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DropFrame" TargetType="Rectangle">
+            <Setter Property="RadiusX" Value="14" />
+            <Setter Property="RadiusY" Value="14" />
+            <Setter Property="StrokeThickness" Value="1.5" />
+            <Setter Property="Stroke" Value="{StaticResource Brush.Disabled}" />
+            <Setter Property="StrokeDashArray" Value="3 3" />
+            <Setter Property="Fill" Value="{StaticResource Brush.Subtle}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsDragOver}" Value="True">
+                    <Setter Property="Stroke" Value="{StaticResource Brush.Ink}" />
+                    <Setter Property="StrokeDashArray" Value="{x:Null}" />
+                    <Setter Property="Fill" Value="{StaticResource Brush.Muted}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="OverlayPad" TargetType="Grid">
+            <Setter Property="Margin" Value="{StaticResource Inset.40.28}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCompact}" Value="True"><Setter Property="Margin" Value="{StaticResource Inset.22.16}" /></DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="DialogHost" TargetType="FrameworkElement">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="MaxHeight" Value="720" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DataContext.IsCompact, RelativeSource={RelativeSource AncestorType=v:MainView}}" Value="True">
+                    <Setter Property="MaxHeight" Value="608" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- ======================================================== Page -->
+        <Grid x:Name="Page">
+            <Grid.IsEnabled>
+                <MultiBinding Converter="{StaticResource InverseBool}"><Binding Path="HasOverlay" /><Binding RelativeSource="{RelativeSource Self}" /></MultiBinding>
+            </Grid.IsEnabled>
+
+            <!-- ==================================================== First run -->
+            <Grid x:Name="FirstRun" Visibility="{Binding IsFirstRun, Converter={StaticResource BoolVis}}">
+                <Border BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,1,0,0" />
+                <StackPanel VerticalAlignment="Center" Margin="{StaticResource Inset.40.22.40.28}">
+                    <TextBlock Style="{StaticResource FirstRunTitle}" Text="{x:Static t:Text.FirstRunTitle}" HorizontalAlignment="Center" TextAlignment="Center" />
+                    <TextBlock Style="{StaticResource T.Lede}" Text="{x:Static t:Text.FirstRunLine}" HorizontalAlignment="Center" Margin="{StaticResource Inset.0.12.0.0}" />
+
+                    <Grid Style="{StaticResource DropZone}" MaxWidth="720" Margin="{StaticResource Inset.0.28.0.0}">
+                        <Rectangle Style="{StaticResource DropFrame}" />
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Canvas Width="44" Height="44" HorizontalAlignment="Center" IsHitTestVisible="False">
+                                <Path Data="M14,8 H27 L34,15 V36 H14 Z" Fill="{StaticResource Brush.Bg}" Stroke="{StaticResource Brush.Ink}" StrokeThickness="1.6" StrokeLineJoin="Round" />
+                                <Path Data="M27,8 V15 H34" Stroke="{StaticResource Brush.Ink}" StrokeThickness="1.6" StrokeLineJoin="Round" />
+                                <Path Data="M9,13 V40 H29" Stroke="{StaticResource Brush.TextMuted}" StrokeThickness="1.6" StrokeLineJoin="Round" />
+                            </Canvas>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="{StaticResource Inset.0.16.0.0}">
+                                <Ellipse Style="{StaticResource Dot}" Fill="{StaticResource Brush.Status.Warn}" Margin="{StaticResource Inset.0.0.8.0}"
+                                         Visibility="{Binding IsWrongType, Converter={StaticResource BoolVis}}" />
+                                <TextBlock x:Name="DropLabel" Style="{StaticResource T.Base}" FontSize="{StaticResource Text.Md}" FontWeight="SemiBold" Text="{Binding DropText}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="{StaticResource Inset.0.16.0.0}"
+                                        Visibility="{Binding ShowDropButtons, Converter={StaticResource BoolVis}}">
+                                <Button x:Name="ChooseFilesButton" KeyboardNavigation.TabIndex="1" Style="{StaticResource Btn.Primary}" Content="{x:Static t:Text.ChooseFiles}" Command="{Binding ChooseFilesCommand}" />
+                                <Button KeyboardNavigation.TabIndex="2" Style="{StaticResource Btn.White}" Content="{x:Static t:Text.ChooseFolder}" Command="{Binding ChooseFolderCommand}" Margin="{StaticResource Inset.12.0.0.0}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Style="{StaticResource T.Meta}" Text="{x:Static t:Text.NoAccountNoTelemetry}" HorizontalAlignment="Center" Margin="{StaticResource Inset.0.28.0.0}" />
+                </StackPanel>
+                <Button x:Name="FirstSettingsButton" KeyboardNavigation.TabIndex="0" Style="{StaticResource Btn.Icon}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="{StaticResource Inset.0.12.16.0}"
+                        AutomationProperties.Name="{x:Static t:Text.Settings}" ToolTip="{x:Static t:Text.Settings}" Command="{Binding OpenSettingsCommand}">
+                    <ContentPresenter ContentTemplate="{StaticResource Icon.Settings}" Content="." />
+                </Button>
+            </Grid>
+
+            <!-- ==================================================== Toolbar, list, detail, footer -->
+            <Grid x:Name="ListScreen" Visibility="{Binding IsList, Converter={StaticResource BoolVis}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Toolbar: 1 certificate, 2 add files, 3 settings -->
+                <Border Grid.Row="0" Style="{StaticResource Toolbar}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,1,0,1" Padding="{StaticResource Inset.22.0.16.0}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel VerticalAlignment="Center" Margin="{StaticResource Inset.0.0.12.0}">
+                            <TextBlock Style="{StaticResource T.Title}" Text="{Binding ProjectName}" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Style="{StaticResource T.Mono}" Text="{Binding ProjectPath}" TextTrimming="CharacterEllipsis" Margin="{StaticResource Inset.0.1.0.0}" />
+                        </StackPanel>
+                        <Button ctl:ModalAppearance.KeepEnabled="{Binding HasOverlay}" x:Name="CertificateButton" Grid.Column="1" Style="{StaticResource Btn.Subtle}" Command="{Binding OpenCertificatesCommand}"
+                                AutomationProperties.Name="{Binding CertAria}">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Style="{StaticResource Dot}" Fill="{Binding CertTone, Converter={StaticResource ToneBrush}}" />
+                                <TextBlock Text="{Binding CertName}" FontWeight="SemiBold" Margin="{StaticResource Inset.8.0.0.0}" VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding CertSourceText}" Foreground="{StaticResource Brush.TextMuted}" Margin="{StaticResource Inset.8.0.0.0}" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HasCertSource}" Value="False"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                                <DataTrigger Binding="{Binding IsCompact}" Value="True"><Setter Property="Visibility" Value="Collapsed" /></DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <Path Data="{StaticResource Geo.Chevron}" Style="{StaticResource IconPath}" Margin="{StaticResource Inset.8.0.0.0}">
+                                    <Path.LayoutTransform><ScaleTransform ScaleX="0.75" ScaleY="0.75" /></Path.LayoutTransform>
+                                </Path>
+                            </StackPanel>
+                        </Button>
+                        <Button Grid.Column="2" Style="{StaticResource Btn.Secondary}" Padding="{StaticResource Inset.12.0.16.0}" Margin="{StaticResource Inset.12.0.0.0}" Command="{Binding AddFilesCommand}"
+                                AutomationProperties.Name="{x:Static t:Text.AddFiles}" AutomationProperties.AcceleratorKey="Ctrl+O">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="{StaticResource Geo.Plus}" Style="{StaticResource IconPath}" />
+                                <TextBlock Text="{x:Static t:Text.AddFiles}" Margin="{StaticResource Inset.8.0.0.0}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="ListSettingsButton" Grid.Column="3" Style="{StaticResource Btn.Icon}" Margin="{StaticResource Inset.12.0.0.0}" Command="{Binding OpenSettingsCommand}"
+                                AutomationProperties.Name="{x:Static t:Text.Settings}" ToolTip="{x:Static t:Text.Settings}">
+                            <ContentPresenter ContentTemplate="{StaticResource Icon.Settings}" Content="." />
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <!-- Body: 4 select all, 5 the list (one stop), 6 the detail panel -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                            <ItemsControl ItemsSource="{Binding Chips}" Margin="{StaticResource Inset.22.12.22.4}" Focusable="False">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border MinHeight="26" CornerRadius="13" Background="{StaticResource Brush.Subtle}" Padding="{StaticResource Inset.12.0}" Margin="{StaticResource Inset.0.0.8.8}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Style="{StaticResource Dot}" Fill="{Binding Tone, Converter={StaticResource ToneBrush}}" />
+                                                <TextBlock Text="{Binding Label}" FontSize="{StaticResource Text.Xs}" FontWeight="Medium" Foreground="{StaticResource Brush.TextOnGrey}"
+                                                           Margin="{StaticResource Inset.8.0.0.0}" VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Border Grid.Row="1" MinHeight="36" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,1,0,1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="44" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ctl:SelectAllCheckBox Style="{StaticResource {x:Type CheckBox}}" ctl:ModalAppearance.KeepEnabled="{Binding IsSelectAllEnabled}" x:Name="SelectAll" IsThreeState="True" IsChecked="{Binding AllChecked, Mode=TwoWay}" IsEnabled="{Binding IsSelectAllEnabled}"
+                                              AutomationProperties.Name="{x:Static t:Text.SelectAllFiles}" />
+                                    <DockPanel Grid.Column="1" Margin="{StaticResource Inset.0.0.22.0}" LastChildFill="True">
+                                        <TextBlock DockPanel.Dock="Right" Style="{StaticResource PublisherColumn}" Text="{x:Static t:Text.ColumnPublisher}" VerticalAlignment="Center" Margin="{StaticResource Inset.16.0.0.0}"
+                                                   FontSize="{StaticResource Text.Xs}" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextMuted}" />
+                                        <TextBlock DockPanel.Dock="Right" Style="{StaticResource StatusColumn}" Text="{x:Static t:Text.ColumnStatus}" VerticalAlignment="Center" Margin="{StaticResource Inset.16.0.0.0}"
+                                                   FontSize="{StaticResource Text.Xs}" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextMuted}" />
+                                        <TextBlock Style="{StaticResource T.Meta}" FontWeight="SemiBold" Text="{x:Static t:Text.ColumnFile}" VerticalAlignment="Center" />
+                                    </DockPanel>
+                                </Grid>
+                            </Border>
+
+                            <ListBox Grid.Row="2" x:Name="FileList" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.CanContentScroll="True" Style="{StaticResource FileList}" ItemContainerStyle="{StaticResource FileRow}"
+                                     ItemsSource="{Binding Rows}" SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                                     PreviewKeyDown="OnFileListKeyDown">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate><VirtualizingStackPanel /></ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="44" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <CheckBox ctl:ModalAppearance.KeepEnabled="{Binding IsCheckEnabled}" IsChecked="{Binding IsChecked, Mode=TwoWay}" IsEnabled="{Binding IsCheckEnabled}" Focusable="False" IsTabStop="False"
+                                                      AutomationProperties.Name="{Binding CheckBoxLabel}" />
+                                            <DockPanel Grid.Column="1" Margin="{StaticResource Inset.0.0.22.0}" LastChildFill="True">
+                                                <TextBlock DockPanel.Dock="Right" Text="{Binding PublisherText}" TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center" Margin="{StaticResource Inset.16.0.0.0}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock" BasedOn="{StaticResource T.Small}">
+                                                            <Setter Property="Width" Value="176" />
+                                                            <Setter Property="Foreground" Value="{StaticResource Brush.TextOnGrey}" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding PublisherIsNone}" Value="True"><Setter Property="Foreground" Value="{StaticResource Brush.TextMuted}" /></DataTrigger>
+                                                                <DataTrigger Binding="{Binding DataContext.IsCompact, RelativeSource={RelativeSource AncestorType=v:MainView}}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="{StaticResource Inset.16.0.0.0}" VerticalAlignment="Center" Style="{StaticResource StatusColumn}">
+                                                    <ctl:Spinner Visibility="{Binding ShowSpinner, Converter={StaticResource BoolVis}}" Margin="{StaticResource Inset.0.0.8.0}" />
+                                                    <Ellipse Style="{StaticResource Dot}" Fill="{Binding Tone, Converter={StaticResource ToneBrush}}" Margin="{StaticResource Inset.0.0.8.0}"
+                                                             Visibility="{Binding ShowDot, Converter={StaticResource BoolVis}}" />
+                                                    <TextBlock Style="{StaticResource T.Small}" Text="{Binding StatusText}" Foreground="{StaticResource Brush.TextOnGrey}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                                                </StackPanel>
+                                                <Grid VerticalAlignment="Center">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Path Data="{StaticResource Geo.File}" Stroke="{StaticResource Brush.TextMuted}" StrokeThickness="1.3" StrokeLineJoin="Round"
+                                                          Width="16" Height="16" VerticalAlignment="Center" IsHitTestVisible="False" />
+                                                    <TextBlock Grid.Column="1" Style="{StaticResource T.Base}" FontSize="{StaticResource Text.Base}" FontWeight="SemiBold"
+                                                               Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Margin="{StaticResource Inset.12.0.0.0}" VerticalAlignment="Center" />
+                                                </Grid>
+                                            </DockPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                    </Grid>
+
+                    <Border Grid.Column="1" Style="{StaticResource DetailColumn}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1,0,0,0">
+                        <ScrollViewer Focusable="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <v:DetailPanel x:Name="Detail" DataContext="{Binding Detail}" Visibility="{Binding Converter={StaticResource HasVis}}" />
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
+                <!-- Footer: 7 check again, 8 sign -->
+                <Border Grid.Row="2" Style="{StaticResource Footer}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,1,0,0" Padding="{StaticResource Inset.22.0}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Style="{StaticResource Btn.Ghost}" Command="{Binding CheckAgainCommand}" Margin="{StaticResource Inset.0.0.12.0}"
+                                    Visibility="{Binding ShowGhostCheckAgain, Converter={StaticResource BoolVis}}" AutomationProperties.Name="{x:Static t:Text.CheckAgain}" AutomationProperties.AcceleratorKey="F5">
+                                <StackPanel Orientation="Horizontal">
+                                    <Path Data="{StaticResource Geo.Refresh}" Style="{StaticResource IconPath}" />
+                                    <TextBlock Text="{x:Static t:Text.CheckAgain}" Margin="{StaticResource Inset.8.0.0.0}" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Button>
+                            <TextBlock Style="{StaticResource T.Small}" Foreground="{StaticResource Brush.TextBody}" AutomationProperties.LiveSetting="Polite" ctl:LiveRegion.Text="{Binding FootNote}" Text="{Binding FootNote}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding ShowFind, Converter={StaticResource BoolVis}}">
+                                <Button Style="{StaticResource Link.Plain}" AutomationProperties.Name="Get a certificate, opens in browser" Content="{x:Static t:Text.GetCertificate}" Command="{Binding GetCertificateCommand}" VerticalAlignment="Center" />
+                                <Button Style="{StaticResource Btn.Secondary}" ctl:ModalAppearance.KeepEnabled="{Binding HasOverlay}" Content="{x:Static t:Text.FindMyCertificate}" Command="{Binding OpenCertificatesCommand}" Margin="{StaticResource Inset.16.0.0.0}" />
+                            </StackPanel>
+                            <Button ctl:ModalAppearance.KeepEnabled="{Binding HasOverlay}" x:Name="PrimaryButton" Style="{StaticResource Btn.Primary}" Padding="{StaticResource Inset.22.0}" Content="{Binding PrimaryLabel}" Command="{Binding PrimaryCommand}"
+                                    Visibility="{Binding ShowPrimary, Converter={StaticResource BoolVis}}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ==================================================== Settings -->
+            <v:SettingsView x:Name="SettingsScreen" Visibility="{Binding IsSettings, Converter={StaticResource BoolVis}}" />
+        </Grid>
+
+        <!-- ======================================================== Dialogs (modal, inside the window) -->
+        <Grid x:Name="OverlayLayer" Background="{StaticResource Brush.Backdrop}" Visibility="{Binding HasOverlay, Converter={StaticResource BoolVis}}">
+            <Grid Style="{StaticResource OverlayPad}">
+                <v:CertificateDialog x:Name="CertDialogView" DataContext="{Binding CertDialog}" MaxWidth="560"
+                                     Visibility="{Binding DataContext.ShowCertificates, RelativeSource={RelativeSource AncestorType=v:MainView}, Converter={StaticResource BoolVis}}">
+                    <v:CertificateDialog.Style>
+                        <Style TargetType="v:CertificateDialog" BasedOn="{StaticResource DialogHost}" />
+                    </v:CertificateDialog.Style>
+                </v:CertificateDialog>
+                <v:SignDialog x:Name="SignDialogView" DataContext="{Binding SignDialog}" MaxWidth="600"
+                              Visibility="{Binding DataContext.ShowSign, RelativeSource={RelativeSource AncestorType=v:MainView}, Converter={StaticResource BoolVis}}">
+                    <v:SignDialog.Style>
+                        <Style TargetType="v:SignDialog" BasedOn="{StaticResource DialogHost}" />
+                    </v:SignDialog.Style>
+                </v:SignDialog>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,112 @@
+<UserControl x:Class="SignMyApp.App.Views.TitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:SignMyApp.App.Controls"
+             xmlns:v="clr-namespace:SignMyApp.App.Views"
+             Height="{StaticResource TitleBar.Height}" Background="{StaticResource TitleBar.Background}"
+             FontFamily="{StaticResource Font.Sans}" UseLayoutRounding="True">
+    <UserControl.Resources>
+        <Style x:Key="Caption" TargetType="ctl:CaptionButton">
+            <Setter Property="Width" Value="{StaticResource TitleBar.ButtonWidth}" />
+            <Setter Property="Height" Value="{StaticResource TitleBar.Height}" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+            <Setter Property="IsCaptionActive" Value="{Binding IsWindowActive, RelativeSource={RelativeSource AncestorType=v:TitleBar}}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TitleBar.Foreground}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ctl:CaptionButton">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsCaptionActive" Value="False"><Setter Property="Foreground" Value="{StaticResource TitleBar.InactiveGlyph}" /></Trigger>
+                <Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{StaticResource TitleBar.Hover}" /></Trigger>
+                <Trigger Property="IsNonClientHover" Value="True"><Setter Property="Background" Value="{StaticResource TitleBar.Hover}" /></Trigger>
+                <Trigger Property="IsPressed" Value="True"><Setter Property="Background" Value="{StaticResource TitleBar.Pressed}" /></Trigger>
+                <Trigger Property="IsNonClientPressed" Value="True"><Setter Property="Background" Value="{StaticResource TitleBar.Pressed}" /></Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CaptionClose" TargetType="ctl:CaptionButton" BasedOn="{StaticResource Caption}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource TitleBar.CloseHover}" />
+                    <Setter Property="Foreground" Value="{StaticResource TitleBar.CloseForeground}" />
+                </Trigger>
+                <Trigger Property="IsNonClientHover" Value="True">
+                    <Setter Property="Background" Value="{StaticResource TitleBar.CloseHover}" />
+                    <Setter Property="Foreground" Value="{StaticResource TitleBar.CloseForeground}" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource TitleBar.ClosePressed}" />
+                    <Setter Property="Foreground" Value="{StaticResource TitleBar.CloseForeground}" />
+                </Trigger>
+                <Trigger Property="IsNonClientPressed" Value="True">
+                    <Setter Property="Background" Value="{StaticResource TitleBar.ClosePressed}" />
+                    <Setter Property="Foreground" Value="{StaticResource TitleBar.CloseForeground}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Glyph" TargetType="Path">
+            <Setter Property="Width" Value="{StaticResource TitleBar.GlyphSize}" />
+            <Setter Property="Height" Value="{StaticResource TitleBar.GlyphSize}" />
+            <Setter Property="StrokeThickness" Value="{StaticResource TitleBar.GlyphStroke}" />
+            <Setter Property="Stroke" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+    </UserControl.Resources>
+    <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <ctl:CaptionButton x:Name="MinimizeButton" Style="{StaticResource Caption}" AutomationProperties.Name="Minimize" Click="Minimize">
+                <Path Style="{StaticResource Glyph}" Data="{StaticResource Geo.CaptionMinimize}" />
+            </ctl:CaptionButton>
+            <ctl:CaptionButton x:Name="MaximizeButton" Click="MaximizeOrRestore">
+                <ctl:CaptionButton.Style>
+                    <Style TargetType="ctl:CaptionButton" BasedOn="{StaticResource Caption}">
+                        <Setter Property="AutomationProperties.Name" Value="Maximize" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMaximized, RelativeSource={RelativeSource AncestorType=v:TitleBar}}" Value="True">
+                                <Setter Property="AutomationProperties.Name" Value="Restore" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ctl:CaptionButton.Style>
+                <Path x:Name="MaximizeGlyph">
+                    <Path.Style>
+                        <Style TargetType="Path" BasedOn="{StaticResource Glyph}">
+                            <Setter Property="Data" Value="{StaticResource Geo.CaptionMaximize}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMaximized, RelativeSource={RelativeSource AncestorType=v:TitleBar}}" Value="True">
+                                    <Setter Property="Data" Value="{StaticResource Geo.CaptionRestore}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Path.Style>
+                </Path>
+            </ctl:CaptionButton>
+            <ctl:CaptionButton x:Name="CloseButton" Style="{StaticResource CaptionClose}" AutomationProperties.Name="Close" Click="Close">
+                <Path Style="{StaticResource Glyph}" Data="{StaticResource Geo.CaptionClose}" />
+            </ctl:CaptionButton>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" IsHitTestVisible="False">
+            <Image x:Name="AppIcon" Source="/SignMyApp;component/Assets/klarseal.ico" Width="{StaticResource TitleBar.IconSize}" Height="{StaticResource TitleBar.IconSize}" Margin="{StaticResource TitleBar.IconMargin}" />
+            <TextBlock x:Name="CaptionTitle" Text="Sign my app" FontSize="{StaticResource TitleBar.TextSize}" VerticalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{StaticResource TitleBar.Foreground}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsWindowActive, RelativeSource={RelativeSource AncestorType=v:TitleBar}}" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource TitleBar.InactiveTitle}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+    </DockPanel>
+</UserControl>

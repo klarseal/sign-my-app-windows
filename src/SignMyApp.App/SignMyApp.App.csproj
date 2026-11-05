@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>SignMyApp</AssemblyName>
+    <RootNamespace>SignMyApp.App</RootNamespace>
+    <Product>Sign my app</Product>
+    <Company>Klarseal</Company>
+    <Version>1.0.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\klarseal.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SignMyApp.Core\SignMyApp.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\*.ttf" />
+    <Resource Include="Assets\klarseal.ico" />
+    <Content Include="Fonts\Manrope-OFL.txt" CopyToOutputDirectory="PreserveNewest" />
+    <InternalsVisibleTo Include="SignMyApp.App.Tests" />
+  </ItemGroup>
+
+</Project>
