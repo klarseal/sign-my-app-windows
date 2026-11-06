@@ -68,7 +68,7 @@ Do not commit binaries to clear the clean-tree check.
 
 The normal test suite checks the icon on the app project's built executable.
 To also check the default self-contained single-file executable's large and small
-icons, commit the release inputs and run from `apps/signapp`:
+icons, commit the release inputs and run from the repository root:
 
 ```powershell
 .\build\Publish-SignMyApp.ps1 -Version 0.0.0-icon-test -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -93,12 +93,10 @@ into separate temporary folders:
 | Self-contained, compressed (default) | 61,571,247 | 58.72 | No separate .NET installation |
 | Framework-dependent | 583,261 | 0.56 | Windows x64 .NET 10 Desktop Runtime |
 
-The previous self-contained download was reported as 133 MiB. Sizes above measure
-the executable only (1 MiB = 1,048,576 bytes), before signing; SDK/runtime updates
-and signing can change them. Both publish outputs were checked and contained no
-PDB files. Neither executable was launched.
+Sizes measure the executable only (1 MiB = 1,048,576 bytes), before signing.
+SDK/runtime updates and signing can change them.
 
-## Founder signs in a separate terminal
+## Maintainer signs in a separate terminal
 
 Install Windows SDK SignTool and make it available on `PATH`. Use your own
 PowerShell terminal with the certificate in `CurrentUser\My` and its provider

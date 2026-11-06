@@ -59,7 +59,7 @@
                                             </StackPanel>
                                         </DockPanel>
                                     </Border>
-                                    <!-- Confirm: Forget D:\work\Tools? Keep (focused) / Forget -->
+                                    <!-- Confirm: Forget C:\work\Tools? Keep (focused) / Forget -->
                                     <Border CornerRadius="{StaticResource Radius.Sm}" Background="{StaticResource Brush.Muted}" Padding="{StaticResource Inset.16.12.12.12}" MinHeight="56"
                                             Visibility="{Binding IsConfirming, Converter={StaticResource BoolVis}}"
                                             AutomationProperties.Name="{Binding GroupLabel}">

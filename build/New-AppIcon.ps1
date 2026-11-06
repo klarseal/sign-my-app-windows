@@ -1,10 +1,10 @@
 param(
-    [string] $SourceSvg = 'D:\Archi\Klarseal\marketing\brand-assets\klarseal-mark-square-white-on-black.svg',
+    [string] $SourceSvg = (Join-Path $PSScriptRoot '..\assets\klarseal-mark-square-white-on-black.svg'),
     [string] $Output = (Join-Path $PSScriptRoot '..\src\SignMyApp.App\Assets\klarseal.ico')
 )
 
 # Authoring only. WPF Geometry accepts this SVG's path grammar; no SVG library or compilation.
-# Run with powershell -NoProfile -STA -File apps/signapp/build/New-AppIcon.ps1.
+# Run with powershell -NoProfile -STA -File build/New-AppIcon.ps1.
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName PresentationCore, WindowsBase
 [xml] $svg = Get-Content -LiteralPath $SourceSvg -Raw

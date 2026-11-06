@@ -374,7 +374,7 @@ public class AccessibilityReviewTests
     public void Virtual_file_list_realizes_only_a_viewport_and_scrolls_to_the_selected_row() => WpfHost.RunAsync(async () =>
     {
         var s = await new Scenario().ResultsAsync();
-        for (var i = 0; i < 1000; i++) s.Vm.Rows.Add(new FileRowViewModel($@"D:\work\App\file{i}.exe"));
+        for (var i = 0; i < 1000; i++) s.Vm.Rows.Add(new FileRowViewModel($@"C:\work\App\file{i}.exe"));
         var view = View(s);
         var list = (ListBox)view.FindName("FileList");
         Assert.Equal(VirtualizationMode.Recycling, VirtualizingPanel.GetVirtualizationMode(list));

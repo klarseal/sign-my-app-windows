@@ -80,7 +80,7 @@ public static class WpfHost
     /// <summary>Render to PNG in tests/artifacts. Returns the path.</summary>
     public static string Render(FrameworkElement element, double width, double height, string name, Brush? background = null)
     {
-        // Full-window boards include the real caption control. No Window/HWND is needed.
+        // Full-window renders include the real caption control. No Window/HWND is needed.
         if (element is SignMyApp.App.Views.MainView main)
         {
             main.ClearValue(FrameworkElement.WidthProperty);

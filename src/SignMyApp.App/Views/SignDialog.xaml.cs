@@ -36,7 +36,7 @@ public partial class SignDialog : UserControl
         _ => CancelButton,
     };
 
-    /// <summary>The Sign window opens on Cancel (founder decision 1). Esc is Cancel.</summary>
+    /// <summary>The Sign window opens with focus on Cancel. Esc is Cancel.</summary>
     public void ApplyInitialFocus()
     {
         _focusedFor = _vm?.Kind;

@@ -163,7 +163,7 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Certificate typography/content are unchanged; only its ground follows canvas v46. -->
+    <!-- Certificate button uses the shared header background. -->
     <Style x:Key="Btn.CertificateOnChrome" TargetType="ButtonBase" BasedOn="{StaticResource Btn.White}">
         <Setter Property="Background" Value="{StaticResource Chrome.Pill}" />
         <Setter Property="Padding" Value="{StaticResource Inset.12.0.12.0}" />

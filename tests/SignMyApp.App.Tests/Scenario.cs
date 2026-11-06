@@ -4,7 +4,7 @@ using SignMyApp.Core;
 
 namespace SignMyApp.App.Tests;
 
-/// <summary>A main view model on the fake services, driven to a canvas state.</summary>
+/// <summary>A main view model on the fake services, driven to a sample state.</summary>
 public sealed class Scenario
 {
     public Scenario(DemoCertificates certs = DemoCertificates.Several, bool trustOtherProject = true, bool trustThisProject = false)

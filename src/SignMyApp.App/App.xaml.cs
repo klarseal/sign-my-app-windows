@@ -8,7 +8,7 @@ namespace SignMyApp.App;
 
 public partial class App : Application
 {
-    /// <summary>Builds the view model for the given command line. <c>--demo</c> shows the canvas sample data.</summary>
+    /// <summary>Builds the view model for the given command line. <c>--demo</c> shows sample data.</summary>
     public static MainViewModel CreateViewModel(string[] args)
     {
         bool demo = args.Any(a => string.Equals(a, "--demo", StringComparison.OrdinalIgnoreCase));

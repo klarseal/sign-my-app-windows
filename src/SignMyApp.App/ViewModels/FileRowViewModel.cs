@@ -6,7 +6,7 @@ namespace SignMyApp.App.ViewModels;
 /// <summary>The status hue carried by a 6 px dot. Never shown without words.</summary>
 public enum Tone { None, Action, Success, Warn, Danger, Neutral }
 
-/// <summary>What a row shows. Mirrors the detail-panel kinds on the canvas.</summary>
+/// <summary>What a row shows. Mirrors the detail-panel kinds in the design.</summary>
 public enum RowKind { Queued, Checking, Unsigned, NoTimestamp, Good, Changed, JustSigned, HeldInstaller, Error }
 
 public sealed class FileRowViewModel : ObservableObject

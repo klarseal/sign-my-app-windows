@@ -4,7 +4,7 @@ using SignMyApp.Core;
 namespace SignMyApp.App.Services;
 
 /// <summary>
-/// Every word the app shows, taken from the approved canvas. One place, so a translation
+/// Every word the app shows, defined by the design. One place, so a translation
 /// replaces this class and nothing else. Do not add words here without a design.
 /// </summary>
 public static class Text

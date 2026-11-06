@@ -13,7 +13,7 @@ using SignMyApp.Core;
 namespace SignMyApp.App.Tests;
 
 /// <summary>
-/// Off-screen renders of the canvas boards to tests/artifacts/*.png, at 1280 × 800 and 1024 × 640.
+/// Off-screen renders of sample states to tests/artifacts/*.png, at 1280 × 800 and 1024 × 640.
 /// Views are measured, arranged and drawn with RenderTargetBitmap on the STA test thread. No window is shown.
 /// </summary>
 public class RenderTests
@@ -28,7 +28,7 @@ public class RenderTests
         return view;
     }
 
-    static void RenderBoth(string board, Func<Task<MainViewModel>> build, Action<MainView>? after = null)
+    static void RenderBoth(string name, Func<Task<MainViewModel>> build, Action<MainView>? after = null)
     {
         foreach (var (w, h, tag) in Sizes)
         {
@@ -38,17 +38,17 @@ public class RenderTests
                 var view = View(vm, w, h);
                 if (vm.HasOverlay) view.ApplyDialogFocus();
                 after?.Invoke(view);
-                var path = WpfHost.Render(view, w, h, board + "-" + tag);
+                var path = WpfHost.Render(view, w, h, name + "-" + tag);
                 Assert.True(new FileInfo(path).Length > 10_000, path);
             });
         }
     }
 
     [Fact]
-    public void Board_1_1_first_run() => RenderBoth("1.1-first-run", async () => (await new Scenario().InitAsync()).Vm);
+    public void Render_first_run() => RenderBoth("1.1-first-run", async () => (await new Scenario().InitAsync()).Vm);
 
     [Fact]
-    public void Board_1_1_drag_over() => RenderBoth("1.1-drag-over", async () =>
+    public void Render_drag_over() => RenderBoth("1.1-drag-over", async () =>
     {
         var s = await new Scenario().InitAsync();
         s.Vm.DragEnter(true);
@@ -56,7 +56,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_1_2_checking() => RenderBoth("1.2-checking", async () =>
+    public void Render_checking() => RenderBoth("1.2-checking", async () =>
     {
         var s = await new Scenario().InitAsync();
         s.Demo.Checker.Hold("Contoso.Json.dll");
@@ -67,13 +67,13 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_1_3_results_certificate_found() => RenderBoth("1.3-results", async () => (await new Scenario().ResultsAsync()).Vm);
+    public void Render_results_certificate_found() => RenderBoth("1.3-results", async () => (await new Scenario().ResultsAsync()).Vm);
 
     [Fact]
-    public void Board_1_4_results_no_certificate() => RenderBoth("1.4-results-no-certificate", async () => (await new Scenario(DemoCertificates.None).ResultsAsync()).Vm);
+    public void Render_results_no_certificate() => RenderBoth("1.4-results-no-certificate", async () => (await new Scenario(DemoCertificates.None).ResultsAsync()).Vm);
 
     [Fact]
-    public void Board_2_1_choose_a_certificate() => RenderBoth("2.1-choose-certificate", async () =>
+    public void Render_choose_a_certificate() => RenderBoth("2.1-choose-certificate", async () =>
     {
         var s = await new Scenario().ResultsAsync();
         await s.Vm.OpenCertificatesCommand.RunAsync();
@@ -81,7 +81,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_3_1_sign_window_review() => RenderBoth("3.1-sign-review", async () =>
+    public void Render_sign_window_review() => RenderBoth("3.1-sign-review", async () =>
     {
         var s = new Scenario();
         await s.ReviewAsync(withMsi: false);
@@ -89,7 +89,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_3_2_sign_window_installer_order() => RenderBoth("3.2-sign-installer", async () =>
+    public void Render_sign_window_installer_order() => RenderBoth("3.2-sign-installer", async () =>
     {
         var s = new Scenario();
         await s.ReviewAsync(withMsi: true);
@@ -97,7 +97,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_3_3_signing() => RenderBoth("3.3-signing", async () =>
+    public void Render_signing() => RenderBoth("3.3-signing", async () =>
     {
         var s = new Scenario();
         var d = await s.ReviewAsync(withMsi: false);
@@ -107,7 +107,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_3_4_signed_and_checked() => RenderBoth("3.4-signed", async () =>
+    public void Render_signed_and_checked() => RenderBoth("3.4-signed", async () =>
     {
         var s = new Scenario();
         var d = await s.ReviewAsync(withMsi: true);
@@ -116,7 +116,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_3_5_back_in_the_list() => RenderBoth("3.5-back-in-list", async () =>
+    public void Render_back_in_the_list() => RenderBoth("3.5-back-in-list", async () =>
     {
         var s = new Scenario();
         var d = await s.ReviewAsync(withMsi: true);
@@ -137,7 +137,7 @@ public class RenderTests
 
     [Theory]
     [MemberData(nameof(Errors))]
-    public void Board_3_6_errors(string tag, string file, SignOutcome outcome) => RenderBoth("3.6-error-" + tag, async () =>
+    public void Render_errors(string tag, string file, SignOutcome outcome) => RenderBoth("3.6-error-" + tag, async () =>
     {
         var s = new Scenario();
         var d = await s.ReviewAsync(withMsi: false);
@@ -148,7 +148,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_3_6_on_demand_full_sha_and_always() => RenderBoth("3.6-review-full-sha-always", async () =>
+    public void Render_on_demand_full_sha_and_always() => RenderBoth("3.6-review-full-sha-always", async () =>
     {
         var s = new Scenario();
         var d = await s.ReviewAsync(withMsi: false);
@@ -158,7 +158,7 @@ public class RenderTests
     });
 
     [Fact]
-    public void Board_4_1_settings_forget_confirm() => RenderBoth("4.1-settings", async () =>
+    public void Render_settings_forget_confirm() => RenderBoth("4.1-settings", async () =>
     {
         var s = await new Scenario(trustThisProject: true).ResultsAsync();
         s.Vm.OpenSettingsCommand.Execute(null);
@@ -167,7 +167,7 @@ public class RenderTests
     }, view => { WpfHost.Layout(view, view.Width, view.Height); view.SettingsScreen.FocusConfirm(); });
 
     [Fact]
-    public void Board_4_2_small_window_results()
+    public void Render_small_window_results()
     {
         WpfHost.RunAsync(async () =>
         {
@@ -180,7 +180,7 @@ public class RenderTests
     }
 
     [Fact]
-    public void Board_4_3_small_window_sign_window_scrolls()
+    public void Render_small_window_sign_window_scrolls()
     {
         WpfHost.RunAsync(async () =>
         {
@@ -200,7 +200,7 @@ public class RenderTests
     }
 
     [Fact]
-    public void Board_1_5_detail_panel_every_state()
+    public void Render_detail_panel_every_state()
     {
         WpfHost.RunAsync(async () =>
         {
@@ -248,7 +248,7 @@ public class RenderTests
     }
 
     [Fact]
-    public void Board_2_2_certificate_states()
+    public void Render_certificate_states()
     {
         WpfHost.RunAsync(async () =>
         {
@@ -341,7 +341,7 @@ public class ViewTests
     }
 
     [Fact]
-    public void Tab_order_follows_the_canvas()
+    public void Tab_order_follows_the_design()
     {
         WpfHost.RunAsync(async () =>
         {

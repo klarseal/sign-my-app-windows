@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-Packages an unsigned Windows x64 release and prints the founder's signing commands.
+Packages an unsigned Windows x64 release and prints the maintainer's signing commands.
 .EXAMPLE
 .\Publish-SignMyApp.ps1 -Version 1.0.0 -Thumbprint ('A' * 40) -WhatIf
 .EXAMPLE
@@ -100,7 +100,7 @@ if ($PSCmdlet.ShouldProcess($outputDirectory, 'Publish unsigned Windows x64 rele
 }
 
 Write-Host ''
-Write-Host 'Founder: run these commands in your own PowerShell terminal after packaging. These are printed ONLY.'
+Write-Host 'Maintainer: run these commands in your own PowerShell terminal after packaging. These are printed ONLY.'
 Write-Host 'Use a Windows SDK terminal where signtool is on PATH and your signing certificate/provider is available.'
 Write-Host ('signtool sign /sha1 {0} /fd sha256 /tr http://time.certum.pl /td sha256 {1}' -f (ConvertTo-PowerShellLiteral $Thumbprint), (ConvertTo-PowerShellLiteral $releaseExe))
 Write-Host 'if ($LASTEXITCODE -ne 0) { throw ''Signing failed; stop here.'' }'

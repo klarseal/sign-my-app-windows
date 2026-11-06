@@ -18,7 +18,7 @@ requires Microsoft SignTool and an available code-signing certificate/provider.
 
 ## Release verification
 
-Complete these entries only after the founder signs and verifies the release:
+Complete these entries only after the maintainer signs and verifies the release:
 
 - Publisher: <publisher shown by signature verification>
 - Signing certificate thumbprint: <SHA-1 thumbprint>

@@ -11,9 +11,9 @@ namespace SignMyApp.App.Tests;
 public class TitleBarRenderTests
 {
     [Fact]
-    public void Board_4_6_window_edge_and_app_icon() => WpfHost.Run(() =>
+    public void Render_window_edge_and_app_icon() => WpfHost.Run(() =>
     {
-        // Canvas v46 TitleBar.dc.html: reproduce its approved two previews and icon sizes.
+        // Render active and inactive window-edge previews and icon sizes.
         // These are off-screen illustrations of DWM states, not a claim to have exercised DWM.
         var section = new StackPanel { Margin = new Thickness(40, 48, 40, 0) };
         section.Children.Add(Label("WINDOW EDGE ON A WHITE DESKTOP · NATIVE SHADOW, 1 PX BORDER, 8 PX CORNERS, GREY CHROME BAND"));
@@ -55,7 +55,7 @@ public class TitleBarRenderTests
                 Background = Brushes.White, Child = preview,
                 Effect = new DropShadowEffect { Color = Color.FromRgb(17, 17, 18), BlurRadius = active ? 32 : 16, ShadowDepth = active ? 8 : 4, Direction = 270, Opacity = active ? .18 : .10 },
             };
-            // Clip the preview to the approved corners; the real app uses native DWM clipping.
+            // Clip the preview to the design corners; the real app uses native DWM clipping.
             frame.SizeChanged += (_, _) => preview.Clip = new RectangleGeometry(new Rect(0, 0, preview.ActualWidth, preview.ActualHeight), 7, 7);
             column.Children.Add(frame);
             column.Children.Add(new TextBlock { Text = active ? "Active" : "Inactive", FontSize = 13, FontWeight = FontWeights.SemiBold, Margin = new Thickness(0, 14, 0, 14) });
@@ -93,9 +93,9 @@ public class TitleBarRenderTests
     };
 
     [Fact]
-    public void Board_4_6_title_bar_states() => WpfHost.Run(() =>
+    public void Render_title_bar_states() => WpfHost.Run(() =>
     {
-        // Approved TitleBar.dc.html, first section (the six caption states), rendered with production controls.
+        // Render the six caption states with production controls.
         var section = new StackPanel { Margin = new Thickness(40, 48, 40, 0) };
         section.Children.Add(new TextBlock
         {
@@ -139,7 +139,7 @@ public class TitleBarRenderTests
     });
 
     [Fact]
-    public void Board_4_6_maximize_and_restore_states() => WpfHost.Run(() =>
+    public void Render_maximize_and_restore_states() => WpfHost.Run(() =>
     {
         var rows = new StackPanel { Margin = new Thickness(40, 48, 40, 0) };
         foreach (var maximized in new[] { false, true })

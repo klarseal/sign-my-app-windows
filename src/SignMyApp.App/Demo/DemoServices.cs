@@ -5,14 +5,14 @@ using SignMyApp.Core;
 
 namespace SignMyApp.App.Demo;
 
-/// <summary>The canvas sample data: Example Software Ltd and the six files. Names, hashes and dates are samples.</summary>
+/// <summary>Sample data: Example Software Ltd and the six files. Names, hashes and dates are samples.</summary>
 public static class DemoData
 {
     public const string Publisher = "Example Software Ltd";
     public const string Issuer = "Example Code Signing CA";
     public const string Folder = @"C:\build\MyApp\release";
     public const string Project = @"C:\build\MyApp";
-    public const string OtherProject = @"D:\work\Tools";
+    public const string OtherProject = @"C:\work\Tools";
 
     public static readonly DateTimeOffset ValidFrom = new(2026, 10, 2, 0, 0, 0, TimeSpan.Zero);
     public static readonly DateTimeOffset ValidTo = new(2028, 1, 1, 0, 0, 0, TimeSpan.Zero);

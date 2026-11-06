@@ -55,7 +55,7 @@
     <SolidColorBrush x:Key="Brush.Status.Danger" Color="{StaticResource Color.Status.Danger}" />
     <SolidColorBrush x:Key="Brush.Status.Neutral" Color="{StaticResource Color.Status.Neutral}" />
 
-    <!-- Approved canvas v46, board 4.6: window edge and continuous grey chrome band. -->
+    <!-- Window edge and continuous grey chrome band. -->
     <Color x:Key="Window.BorderActiveColor">#D3D3CD</Color>
     <Color x:Key="Window.BorderInactiveColor">#E3E3DE</Color>
     <SolidColorBrush x:Key="Chrome.Background" Color="{StaticResource Color.Grey50}" />
@@ -108,7 +108,7 @@
     <sys:Double x:Key="Space.Lg">28</sys:Double>
     <sys:Double x:Key="Space.Xl">40</sys:Double>
 
-    <!-- Thickness values on the approved spacing scale; two components mean horizontal/vertical; four mean left/top/right/bottom. The 1 px toolbar baseline is optical. -->
+    <!-- Thickness values on the design spacing scale; two components mean horizontal/vertical; four mean left/top/right/bottom. The 1 px toolbar baseline is optical. -->
     <Thickness x:Key="Inset.0.0.0.12">0,0,0,12</Thickness>
     <Thickness x:Key="Inset.0.0.0.8">0,0,0,8</Thickness>
     <Thickness x:Key="Inset.0.0.12.0">0,0,12,0</Thickness>

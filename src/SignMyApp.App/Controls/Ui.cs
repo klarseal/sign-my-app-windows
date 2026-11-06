@@ -22,7 +22,7 @@ public sealed class InverseBoolConverter : IValueConverter, IMultiValueConverter
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => [];
 }
 
-/// <summary>Disabling modal background input must not grey out the approved backdrop rendering.</summary>
+/// <summary>Disabling modal background input must not grey out the backdrop rendering.</summary>
 public static class ModalAppearance
 {
     public static readonly DependencyProperty KeepEnabledProperty = DependencyProperty.RegisterAttached(

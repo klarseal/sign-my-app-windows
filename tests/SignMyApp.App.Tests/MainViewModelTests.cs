@@ -54,7 +54,7 @@ public class FirstRunTests
 public class ResultsTests
 {
     [Fact]
-    public async Task Results_show_the_canvas_chips_ticks_and_footer()
+    public async Task Results_show_status_chips_ticks_and_footer()
     {
         var s = await new Scenario().ResultsAsync();
         var vm = s.Vm;
@@ -313,7 +313,7 @@ public class SettingsTests
         var row = s.Vm.Settings.TrustRows[1];
         row.AskCommand.Execute(null);
         Assert.True(row.IsConfirming);
-        Assert.Equal(@"Forget D:\work\Tools", row.GroupLabel);
+        Assert.Equal(@"Forget C:\work\Tools", row.GroupLabel);
         row.KeepCommand.Execute(null);
         Assert.False(row.IsConfirming);
         Assert.Equal(2, s.Demo.Trust.List().Count);
@@ -394,7 +394,7 @@ public class FileSetTests
 public class FormattingTests
 {
     [Fact]
-    public void Dates_hashes_and_plurals_match_the_canvas()
+    public void Dates_hashes_and_plurals_match_the_sample_data()
     {
         Assert.Equal("2 Oct 2026 \u2013 1 Jan 2028", Text.Range(DemoData.ValidFrom, DemoData.ValidTo));
         Assert.Equal("3 Feb 2026, 09:14 UTC", Text.Stamp(new DateTimeOffset(2026, 2, 3, 9, 14, 0, TimeSpan.Zero)));

@@ -40,7 +40,7 @@ public class TitleBarTests
     });
 
     [Fact]
-    public void Caption_names_sizes_glyphs_and_tab_order_match_board_4_6() => WpfHost.Run(() =>
+    public void Caption_names_sizes_glyphs_and_tab_order_match_the_design() => WpfHost.Run(() =>
     {
         var bar = new TitleBar();
         WpfHost.Layout(bar, 1024, 32);
@@ -77,7 +77,7 @@ public class TitleBarTests
     [InlineData("Minimize", "#E3E3DE", "#D3D3CD", "#111112")]
     [InlineData("Maximize", "#E3E3DE", "#D3D3CD", "#111112")]
     [InlineData("Close", "#C42B1C", "#C84031", "#FFFFFF")]
-    public void Caption_triggers_render_the_approved_states(string name, string hover, string pressed, string foreground) => WpfHost.Run(() =>
+    public void Caption_triggers_render_the_design_states(string name, string hover, string pressed, string foreground) => WpfHost.Run(() =>
     {
         var bar = new TitleBar();
         WpfHost.Layout(bar, 800, 32);
