@@ -18,6 +18,7 @@ public partial class MainView : UserControl
     UIElement? _settingsOpener;
     Screen _shownScreen;
     MainViewModel? _vm;
+    bool _keyboardNavigation = true;
 
     public MainView()
     {
@@ -29,6 +30,7 @@ public partial class MainView : UserControl
         DragLeave += (_, _) => _vm?.DragLeave();
         Drop += OnDrop;
         PreviewKeyDown += OnPreviewKeyDown;
+        PreviewMouseDown += (_, _) => _keyboardNavigation = false;
     }
 
     public CertificateDialog CertificateDialogView => CertDialogView;
@@ -110,7 +112,12 @@ public partial class MainView : UserControl
         }
     }
 
-    void FocusFileRow() => FocusRing.Show(FileFocusTarget);
+    void FocusFileRow()
+    {
+        var target = FileFocusTarget;
+        target.Focus();
+        FocusRing.SetIsVisible(target, _keyboardNavigation);
+    }
 
     /// <summary>Puts focus inside the open dialog: Cancel for the Sign window, the chosen certificate otherwise.</summary>
     public void ApplyDialogFocus()
@@ -124,6 +131,7 @@ public partial class MainView : UserControl
 
     void OnPreviewKeyDown(object sender, KeyEventArgs e)
     {
+        _keyboardNavigation = true;
         if (HandleKey(e.Key)) e.Handled = true;
     }
 

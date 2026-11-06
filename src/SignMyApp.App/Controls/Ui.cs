@@ -96,6 +96,14 @@ public static class FocusRing
         _registered = true;
         EventManager.RegisterClassHandler(typeof(UIElement), Keyboard.GotKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(OnGot), true);
         EventManager.RegisterClassHandler(typeof(UIElement), Keyboard.LostKeyboardFocusEvent, new KeyboardFocusChangedEventHandler(OnLost), true);
+        EventManager.RegisterClassHandler(typeof(UIElement), Mouse.PreviewMouseDownEvent, new MouseButtonEventHandler(OnMouseDown), true);
+    }
+
+    // Clicking a row which already has focus produces no Got/LostKeyboardFocus event.
+    // Clear its previous keyboard ring (also when the click lands on its checkbox/content).
+    static void OnMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is DependencyObject d) SetIsVisible(d, false);
     }
 
     static void OnGot(object sender, KeyboardFocusChangedEventArgs e)

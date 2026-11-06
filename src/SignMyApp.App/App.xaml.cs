@@ -32,6 +32,7 @@ public partial class App : Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+        AppIdentity.Register(); // Before any window, including an initialization error message.
         base.OnStartup(e);
         FocusRing.Register();
         MainViewModel vm;

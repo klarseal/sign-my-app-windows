@@ -22,7 +22,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border Style="{StaticResource Toolbar}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,1,0,1" Padding="{StaticResource Inset.12.0.22.0}">
+        <Border x:Name="SettingsHeader" Style="{StaticResource Toolbar}" Background="{StaticResource Chrome.Background}" BorderBrush="{StaticResource Chrome.Baseline}" BorderThickness="{StaticResource Chrome.BaselineThickness}" Padding="{StaticResource Inset.12.0.22.0}">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BackButton" AutomationProperties.Name="{x:Static t:Text.Files}" Style="{StaticResource Btn.Ghost}" Padding="{StaticResource Inset.12.0.12.0}" Command="{Binding BackCommand}">
                     <StackPanel Orientation="Horizontal">

@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <UseAppHost>false</UseAppHost>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,5 +25,32 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
+
+  <!-- Resolve the app's actual output for this build's configuration and output paths. -->
+  <Target Name="RecordAppExecutable" BeforeTargets="GetAssemblyAttributes" DependsOnTargets="ResolveProjectReferences">
+    <ItemGroup>
+      <_AppOutput Include="@(_ResolvedProjectReferencePaths)" Condition="'%(_ResolvedProjectReferencePaths.Filename)' == 'SignMyApp'" />
+    </ItemGroup>
+    <Error Condition="'@(_AppOutput->Count())' != '1'" Text="Expected exactly one resolved SignMyApp application output, got: @(_AppOutput)" />
+    <ItemGroup>
+      <AssemblyMetadata Include="SignMyAppExecutable" Value="@(_AppOutput->'%(RootDir)%(Directory)%(Filename).exe')" />
+      <AssemblyMetadata Include="SignMyAppSourceDirectory" Value="$(MSBuildProjectDirectory)\..\.." />
+    </ItemGroup>
+  </Target>
+
+  <!-- The transitive CLI apphost (signmyapp.exe) collides with the GUI apphost on Windows.
+       The test runner needs their managed assemblies, not either application host. -->
+  <Target Name="ExcludeAppHostFromTestOutput" AfterTargets="GetCopyToOutputDirectoryItems">
+    <ItemGroup>
+      <_SourceItemsToCopyToOutputDirectory Remove="@(_SourceItemsToCopyToOutputDirectory)"
+          Condition="'%(_SourceItemsToCopyToOutputDirectory.TargetPath)' == 'SignMyApp.exe'" />
+      <_SourceItemsToCopyToOutputDirectoryAlways Remove="@(_SourceItemsToCopyToOutputDirectoryAlways)"
+          Condition="'%(_SourceItemsToCopyToOutputDirectoryAlways.TargetPath)' == 'SignMyApp.exe'" />
+      <_SourceItemsToCopyToOutputDirectoryIfDifferent Remove="@(_SourceItemsToCopyToOutputDirectoryIfDifferent)"
+          Condition="'%(_SourceItemsToCopyToOutputDirectoryIfDifferent.TargetPath)' == 'SignMyApp.exe'" />
+      <AllItemsFullPathWithTargetPath Remove="@(AllItemsFullPathWithTargetPath)"
+          Condition="'%(AllItemsFullPathWithTargetPath.TargetPath)' == 'SignMyApp.exe'" />
+    </ItemGroup>
+  </Target>
 
 </Project>

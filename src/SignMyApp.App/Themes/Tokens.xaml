@@ -55,7 +55,16 @@
     <SolidColorBrush x:Key="Brush.Status.Danger" Color="{StaticResource Color.Status.Danger}" />
     <SolidColorBrush x:Key="Brush.Status.Neutral" Color="{StaticResource Color.Status.Neutral}" />
 
-    <!-- Approved canvas v43, board 4.6: Windows caption, independent of action/status colours. -->
+    <!-- Approved canvas v46, board 4.6: window edge and continuous grey chrome band. -->
+    <Color x:Key="Window.BorderActiveColor">#D3D3CD</Color>
+    <Color x:Key="Window.BorderInactiveColor">#E3E3DE</Color>
+    <SolidColorBrush x:Key="Chrome.Background" Color="{StaticResource Color.Grey50}" />
+    <SolidColorBrush x:Key="Chrome.Baseline" Color="{StaticResource Color.Grey200}" />
+    <SolidColorBrush x:Key="Chrome.Pill" Color="{StaticResource Color.Grey0}" />
+    <Thickness x:Key="Chrome.BaselineThickness">0,0,0,1</Thickness>
+    <Thickness x:Key="Window.GlassFrameThickness">0,0,0,1</Thickness>
+    <sys:Double x:Key="Window.BorderWidth">1</sys:Double>
+    <sys:Double x:Key="FileRow.SelectionBarWidth">3</sys:Double>
     <sys:Double x:Key="TitleBar.Height">32</sys:Double>
     <sys:Double x:Key="TitleBar.ButtonWidth">46</sys:Double>
     <sys:Double x:Key="TitleBar.IconSize">16</sys:Double>
@@ -63,10 +72,10 @@
     <sys:Double x:Key="TitleBar.GlyphSize">10</sys:Double>
     <sys:Double x:Key="TitleBar.GlyphStroke">1</sys:Double>
     <Thickness x:Key="TitleBar.IconMargin">8,0,8,0</Thickness>
-    <SolidColorBrush x:Key="TitleBar.Background" Color="{StaticResource Color.Grey0}" />
+    <SolidColorBrush x:Key="TitleBar.Background" Color="{StaticResource Color.Grey50}" />
     <SolidColorBrush x:Key="TitleBar.Foreground" Color="{StaticResource Color.Grey900}" />
-    <SolidColorBrush x:Key="TitleBar.Hover" Color="{StaticResource Color.Grey100}" />
-    <SolidColorBrush x:Key="TitleBar.Pressed" Color="{StaticResource Color.Grey200}" />
+    <SolidColorBrush x:Key="TitleBar.Hover" Color="{StaticResource Color.Grey200}" />
+    <SolidColorBrush x:Key="TitleBar.Pressed" Color="{StaticResource Color.Grey300}" />
     <SolidColorBrush x:Key="TitleBar.InactiveGlyph" Color="{StaticResource Color.Grey400}" />
     <SolidColorBrush x:Key="TitleBar.InactiveTitle" Color="{StaticResource Color.Grey500}" />
     <Color x:Key="TitleBar.CloseHoverColor">#C42B1C</Color>

@@ -66,6 +66,22 @@ An existing version output directory is never overwritten. Failed publishing
 may leave partial output; move it aside before retrying. Release outputs are ignored under `out/`.
 Do not commit binaries to clear the clean-tree check.
 
+The normal test suite checks the icon on the app project's built executable.
+To also check the default self-contained single-file executable's large and small
+icons, commit the release inputs and run from `apps/signapp`:
+
+```powershell
+.\build\Publish-SignMyApp.ps1 -Version 0.0.0-icon-test -Thumbprint AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+$env:SIGNMYAPP_PUBLISH_TESTS = '1'
+dotnet test SignMyApp.slnx
+Remove-Item Env:SIGNMYAPP_PUBLISH_TESTS
+```
+
+The opt-in test inspects `out/0.0.0-icon-test/SignMyApp-0.0.0-icon-test-win-x64.exe`
+without launching it and fails with packaging instructions if it is missing.
+Package before running the suite: render tests can update tracked artifacts,
+and the publish script requires a clean tree. No signing is performed.
+
 ## Measured download sizes
 
 Unsigned version `1.0.0`, Release/win-x64, measured on 2026-11-05 with .NET SDK

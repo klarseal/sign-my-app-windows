@@ -20,7 +20,7 @@ public class TitleBarTests
         var chrome = WindowChrome.GetWindowChrome(window);
         Assert.Equal(32, chrome.CaptionHeight);
         Assert.Equal(new Thickness(6), chrome.ResizeBorderThickness);
-        Assert.Equal(new Thickness(0), chrome.GlassFrameThickness);
+        Assert.Equal(new Thickness(0, 0, 0, 1), chrome.GlassFrameThickness);
         Assert.False(chrome.UseAeroCaptionButtons);
         Assert.Equal(WindowStyle.SingleBorderWindow, window.WindowStyle);
         Assert.Equal(ResizeMode.CanResize, window.ResizeMode);
@@ -74,8 +74,8 @@ public class TitleBarTests
     });
 
     [Theory]
-    [InlineData("Minimize", "#ECECE8", "#E3E3DE", "#111112")]
-    [InlineData("Maximize", "#ECECE8", "#E3E3DE", "#111112")]
+    [InlineData("Minimize", "#E3E3DE", "#D3D3CD", "#111112")]
+    [InlineData("Maximize", "#E3E3DE", "#D3D3CD", "#111112")]
     [InlineData("Close", "#C42B1C", "#C84031", "#FFFFFF")]
     public void Caption_triggers_render_the_approved_states(string name, string hover, string pressed, string foreground) => WpfHost.Run(() =>
     {

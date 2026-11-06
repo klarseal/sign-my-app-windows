@@ -143,7 +143,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Toolbar: 1 certificate, 2 add files, 3 settings -->
-                <Border Grid.Row="0" Style="{StaticResource Toolbar}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,1,0,1" Padding="{StaticResource Inset.22.0.16.0}">
+                <Border x:Name="AppHeader" Grid.Row="0" Style="{StaticResource Toolbar}" Background="{StaticResource Chrome.Background}" BorderBrush="{StaticResource Chrome.Baseline}" BorderThickness="{StaticResource Chrome.BaselineThickness}" Padding="{StaticResource Inset.22.0.16.0}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -155,7 +155,7 @@
                             <TextBlock Style="{StaticResource T.Title}" Text="{Binding ProjectName}" TextTrimming="CharacterEllipsis" />
                             <TextBlock Style="{StaticResource T.Mono}" Text="{Binding ProjectPath}" TextTrimming="CharacterEllipsis" Margin="{StaticResource Inset.0.1.0.0}" />
                         </StackPanel>
-                        <Button ctl:ModalAppearance.KeepEnabled="{Binding HasOverlay}" x:Name="CertificateButton" Grid.Column="1" Style="{StaticResource Btn.Subtle}" Command="{Binding OpenCertificatesCommand}"
+                        <Button ctl:ModalAppearance.KeepEnabled="{Binding HasOverlay}" x:Name="CertificateButton" Grid.Column="1" Style="{StaticResource Btn.CertificateOnChrome}" Command="{Binding OpenCertificatesCommand}"
                                 AutomationProperties.Name="{Binding CertAria}">
                             <StackPanel Orientation="Horizontal">
                                 <Ellipse Style="{StaticResource Dot}" Fill="{Binding CertTone, Converter={StaticResource ToneBrush}}" />
@@ -175,7 +175,7 @@
                                 </Path>
                             </StackPanel>
                         </Button>
-                        <Button Grid.Column="2" Style="{StaticResource Btn.Secondary}" Padding="{StaticResource Inset.12.0.16.0}" Margin="{StaticResource Inset.12.0.0.0}" Command="{Binding AddFilesCommand}"
+                        <Button x:Name="AddFilesButton" Grid.Column="2" Style="{StaticResource Btn.White}" Padding="{StaticResource Inset.12.0.16.0}" Margin="{StaticResource Inset.12.0.0.0}" Command="{Binding AddFilesCommand}"
                                 AutomationProperties.Name="{x:Static t:Text.AddFiles}" AutomationProperties.AcceleratorKey="Ctrl+O">
                             <StackPanel Orientation="Horizontal">
                                 <Path Data="{StaticResource Geo.Plus}" Style="{StaticResource IconPath}" />

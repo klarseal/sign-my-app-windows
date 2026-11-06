@@ -2,6 +2,8 @@ using System.Windows;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using SignMyApp.App.Controls;
+using SignMyApp.App.Services;
+using System.Windows.Media;
 
 namespace SignMyApp.App;
 
@@ -10,7 +12,42 @@ public partial class MainWindow : Window
     HwndSource? _source;
     bool _maximizeCaptured;
 
-    public MainWindow() => InitializeComponent();
+    public MainWindow()
+    {
+        InitializeComponent();
+        Icon = AppIdentity.LoadWindowIcon();
+    }
+
+    protected override void OnActivated(EventArgs e)
+    {
+        base.OnActivated(e);
+        UpdateWindowFrame();
+    }
+
+    protected override void OnDeactivated(EventArgs e)
+    {
+        base.OnDeactivated(e);
+        UpdateWindowFrame();
+    }
+
+    protected override void OnStateChanged(EventArgs e)
+    {
+        base.OnStateChanged(e);
+        UpdateWindowFrame();
+    }
+
+    protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+    {
+        base.OnDpiChanged(oldDpi, newDpi);
+        UpdateWindowFrame();
+    }
+
+    void UpdateWindowFrame()
+    {
+        if (_source is null) return; // Never create an HWND just to update chrome.
+        WindowFrame.Apply(FallbackWindowBorder, IsActive, WindowState == WindowState.Maximized,
+            VisualTreeHelper.GetDpi(this), (attribute, value) => WindowFrame.SetAttribute(_source.Handle, attribute, value));
+    }
 
     protected override void OnSourceInitialized(EventArgs e)
     {
@@ -18,6 +55,7 @@ public partial class MainWindow : Window
         // AddHook prepends: this runs before WindowChrome's default HTCLIENT mapping for buttons.
         _source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
         _source?.AddHook(WindowProc);
+        UpdateWindowFrame();
     }
 
     protected override void OnClosed(EventArgs e)
